@@ -15,7 +15,7 @@ var getFromApi = function(endpoint, query) {
 };
 
 
-var artist ;
+var artist;
 var getArtist = function(name) {
     var query = {
         q: name,
@@ -23,13 +23,33 @@ var getArtist = function(name) {
         type: 'artist'
     }
 
-    return getFromApi('search', query).then(function(response){
+    return getFromApi('search', query).then(function(response) {
         artist = response.artists.items[0];
-        console.log(artist)
-        return artist
+        //console.log(artist);
+        //return artist
+        var id = artist.id;
+        //console.log(id);
+        return getFromApi("artists/" + id + "/related-artists");
+    }).then(function(response) {
+        artist.related = response.artists;
+        var promises = [];
+        for(var i = 0; i < artist.related.length; i++) {
+            var relatedId = artist.related[i].id;
+            promises.push(getFromApi("artists/" + relatedId + "/top-tracks?country=US"));
+        }
+        var allPromise = Promise.all(promises);
+        console.log(allPromise);
+        return allPromise.then(function(responses) {
+            console.log(promises);
+            for(responseElement in responses) {
+                //artist.related.tracks = response.tracks;
+                responses[responseElement] = responses.tracks;
+                console.log(responses[responseElement]);
+            }
+            //console.log(artist.related);
+        })
     }).catch(function(err){
         console.error("This is the error: " + err);
     });
     
 };
-

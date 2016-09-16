@@ -40,13 +40,11 @@ var getArtist = function(name) {
         var allPromise = Promise.all(promises);
         console.log(allPromise);
         return allPromise.then(function(responses) {
-            console.log(promises);
-            for(responseElement in responses) {
-                //artist.related.tracks = response.tracks;
-                responses[responseElement] = responses.tracks;
-                console.log(responses[responseElement]);
+            //console.log(responses);
+            for(var i = 0; i<responses.length;i++) {
+                artist.related.tracks = responses[i].tracks
             }
-            //console.log(artist.related);
+            return artist
         })
     }).catch(function(err){
         console.error("This is the error: " + err);

@@ -42,9 +42,12 @@ var getArtist = function(name) {
         return allPromise.then(function(responses) {
             //console.log(responses);
             for(var i = 0; i<responses.length;i++) {
-                artist.related.tracks = responses[i].tracks
+                //console.log(responses[i].tracks)
+                artist.related[i].tracks = responses[i].tracks
+                //console.log(artist.tracks[i])
             }
-            return artist
+          console.log(artist.related)  
+          return artist
         })
     }).catch(function(err){
         console.error("This is the error: " + err);
